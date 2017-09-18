@@ -1,4 +1,5 @@
 class MilkStateNode:
+	state = {0, 0, 0, 0}
 	max_jug_a = 40
 	max_jug_b = 40
 	max_jug_c = 4
