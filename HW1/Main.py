@@ -27,7 +27,7 @@ def main():
 	if not milk_state_tester.runTests():
 		exit()
 	
-	initial_state = MilkStateNode(jugA, jugB, jugC, jugD)
+	initial_state = MilkStateNode([jugA, jugB, jugC, jugD])
 	dfs = DepthFirstSearch(initial_state, goalFunction)
 	
 	

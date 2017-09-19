@@ -2,8 +2,8 @@ class MilkStateNode:
 	state = [0, 0, 0, 0]
 	jug_max = [40, 40, 4, 5]
 	
-	def __init__(self, jug_a, jug_b, jug_c, juc_d):
-		self.state = [jug_a, jug_b, jug_c, juc_d]
+	def __init__(self, given_jugs):
+		self.state = given_jugs
 		
 	def setMax(self, jug, new_max):
 		self.jug_max[jug] = new_max
@@ -14,7 +14,7 @@ class MilkStateNode:
 	def isEmpty(self, jug):
 		return self.state[jug] == 0
 		
-	def equals(self, node):
+	def isEqual(self, node):
 		if node.state[0] != self.state[0] :
 			return False
 		elif node.state[1] != self.state[1]:
@@ -25,6 +25,25 @@ class MilkStateNode:
 			return False
 		else:
 			return True
+	
+	def equals(self, node):
+		for i in range(4):
+			self.state[i] = node.state[i]
+			self.jug_max[i] = node.jug_max[i]
 			
 	def pourJug(self, jug1, jug2):
-		if self.state[jug1] == self
+		if self.isEmpty(jug1) or self.isFull(jug2):
+			return
+		newJug2 = self.state[jug2] + self.state[jug1]
+		newJug1 = 0
+		if newJug2 > self.jug_max[jug2]:
+			delta = newJug2 - self.jug_max[jug2]
+			newJug2 = newJug2 - delta
+			newJug1 = newJug1 + delta 
+		new_states = [0,0,0,0]
+		for i in range(4):
+			new_states[i] = self.state[i]
+		
+		new_states[jug1] = newJug1
+		new_states[jug2] = newJug2
+		return new_states
