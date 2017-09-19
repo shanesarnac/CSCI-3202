@@ -20,17 +20,29 @@ class MilkStateNode:
 	def setMaxJugD(self, maxD):
 		self.max_jug_d = maxD
 		
-	def isMaxJugA(self):
+	def isFullJugA(self):
 		return self.state[0] == self.max_jug_a
 		
-	def isMaxJugB(self):
+	def isFullJugB(self):
 		return self.state[1] == self.max_jug_b
 	
-	def isMaxJugC(self): 
+	def isFullJugC(self): 
 		return self.state[2] == self.max_jug_c
 	
-	def isMaxJugD(self):
+	def isFullJugD(self):
 		return self.state[3] == self.max_jug_d
+		
+	def isEmptyJugA(self):
+		return self.state[0] == 0
+	
+	def isEmptyJugB(self):
+		return self.state[1] == 0
+	
+	def isEmptyJugC(self):
+		return self.state[2] == 0
+		
+	def isEmptyJugD(self):
+		return self.state[3] == 0
 		
 	def equals(self, node):
 		if node.state[0] != self.state[0] :
