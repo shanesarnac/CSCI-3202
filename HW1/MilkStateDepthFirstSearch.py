@@ -42,8 +42,22 @@ class DepthFirstSearch:
 			
 
 	def printFrontier(self):
+		print("Frontier:")
 		for path in self.frontier:
 			print("Parent = " + str(path.parent.state))
+			print("Current = " + str(path.current.state))
+			print("\n")
+			
+	def printAlreadyChecked(self):
+		print("Already Checked:")
+		if (len(self.already_checked) == 0):
+			print("No items checked")
+			return
+		for path in self.already_checked:
+			if path.parent == []:
+				print("Parent = []")
+			else:
+				print("Parent = " + str(path.parent.state))
 			print("Current = " + str(path.current.state))
 			print("\n")
 		
@@ -57,4 +71,5 @@ class DepthFirstSearch:
 			# Expand current
 			self.expandMilkStateNode(current_path)
 			self.printFrontier()
+			self.printAlreadyChecked()
 			# DFS with Last in First Out
