@@ -1,8 +1,5 @@
 from MilkStateNode import MilkStateNode
 from PathNode import PathNode
-
-
-		
 	
 
 class DepthFirstSearch:
@@ -15,27 +12,40 @@ class DepthFirstSearch:
 		self.goal_func = goal
 		self.dfs(PathNode([], start))
 		
-	def expandMilkStateNode(milk_state_node):
+	def expandMilkStateNode(self, milk_state_path_node):
+		current_node = milk_state_path_node.current
 		possible_nodes = []
 		for i in range(3):
-			new_state = milk_state_node.pourJug(0, i+1)
-			possible_nodes.append(PathNode(milk_state_node, MilkStateNode(new_state)))
+			new_state = current_node.pourJug(0, i+1)
+			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
 			
-			new_state = milk_state_node.pourJug(3, 2-i)
-			possible_nodes.append(PathNode(milk_state_node, MilkStateNode(new_state)))
+			new_state = current_node.pourJug(3, 2-i)
+			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
 			
-		new_state = milk_state_node.pourJug(1,0)
-		possible_nodes.append(PathNode(milk_state_node, MilkStateNode(new_state)))
+		new_state = current_node.pourJug(1,0)
+		possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
 		
 		for i in range(2):
-			new_state = milk_state_node.pourJug(1, i+2)
-			possible_nodes.append(PathNode(milk_state_node, MilkStateNode(new_state)))
+			new_state = current_node.pourJug(1, i+2)
+			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
 			
-			new_state = milk_state_node.pourJug(2, i)
-			possible_nodes.append(PathNode(milk_state_node, MilkStateNode(new_state)))
+			new_state = current_node.pourJug(2, i)
+			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
+		
+		for path in possible_nodes:
+			if path in self.already_checked:
+				possible_nodes.remove(path)
+		
+		for path in possible_nodes:
+			if path.current.state is not None:
+				self.frontier.append(path)
 			
-		
-		
+
+	def printFrontier(self):
+		for path in self.frontier:
+			print("Parent = " + str(path.parent.state))
+			print("Current = " + str(path.current.state))
+			print("\n")
 		
 		
 	def dfs(self, current_path):
@@ -45,4 +55,6 @@ class DepthFirstSearch:
 		else:
 			self.already_checked.append(current_path)
 			# Expand current
+			self.expandMilkStateNode(current_path)
+			self.printFrontier()
 			# DFS with Last in First Out

@@ -4,8 +4,8 @@ from MilkStateDepthFirstSearch import DepthFirstSearch
 
 jugA = 40
 jugB = 40
-jugC = 4
-jugD = 5
+jugC = 0
+jugD = 0
 
 
 def goalFunction(node):

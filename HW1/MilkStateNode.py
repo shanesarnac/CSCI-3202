@@ -33,6 +33,7 @@ class MilkStateNode:
 			
 	def pourJug(self, jug1, jug2):
 		if self.isEmpty(jug1) or self.isFull(jug2):
+			#print("the first jug is either empty or the second jug is already full")
 			return
 		newJug2 = self.state[jug2] + self.state[jug1]
 		newJug1 = 0
@@ -46,4 +47,5 @@ class MilkStateNode:
 		
 		new_states[jug1] = newJug1
 		new_states[jug2] = newJug2
+		#print("new states = " + str(new_states))
 		return new_states
