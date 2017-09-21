@@ -6,45 +6,51 @@ class DepthFirstSearch:
 	frontier = []
 	already_checked = []
 	goal_func = 0
+	max_iter = 1
+	current_iter = 0
 	
 	def __init__(self, start, goal):
 		print("entered DepthFirstSearch init")
 		self.goal_func = goal
 		self.dfs(PathNode([], start))
 		
+	def addToFrontier(self, milk_state_path_node):
+		if milk_state_path_node.current in self.already_checked:
+			return
+		for node in self.frontier:
+			if node.current.state == milk_state_path_node.current.state:
+				return
+		if milk_state_path_node.current.state is None:
+			return
+		self.frontier.append(milk_state_path_node)
+		
+		
 	def expandMilkStateNode(self, milk_state_path_node):
 		current_node = milk_state_path_node.current
 		possible_nodes = []
 		for i in range(3):
 			new_state = current_node.pourJug(0, i+1)
-			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
-			
+			self.addToFrontier(PathNode(milk_state_path_node, MilkStateNode(new_state)))
 			new_state = current_node.pourJug(3, 2-i)
-			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
+			self.addToFrontier(PathNode(milk_state_path_node, MilkStateNode(new_state)))
 			
 		new_state = current_node.pourJug(1,0)
-		possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
+		self.addToFrontier(PathNode(milk_state_path_node, MilkStateNode(new_state)))
 		
 		for i in range(2):
 			new_state = current_node.pourJug(1, i+2)
-			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
-			
+			self.addToFrontier(PathNode(milk_state_path_node, MilkStateNode(new_state)))
 			new_state = current_node.pourJug(2, i)
-			possible_nodes.append(PathNode(current_node, MilkStateNode(new_state)))
-		
-		for path in possible_nodes:
-			if path in self.already_checked:
-				possible_nodes.remove(path)
-		
-		for path in possible_nodes:
-			if path.current.state is not None:
-				self.frontier.append(path)
-			
+			self.addToFrontier(PathNode(milk_state_path_node, MilkStateNode(new_state)))
+
 
 	def printFrontier(self):
 		print("Frontier:")
 		for path in self.frontier:
-			print("Parent = " + str(path.parent.state))
+			if path.parent == []:
+				print("Parent = []")
+			else:
+				print("Parent = " + str(path.parent.current.state))
 			print("Current = " + str(path.current.state))
 			print("\n")
 			
@@ -53,23 +59,29 @@ class DepthFirstSearch:
 		if (len(self.already_checked) == 0):
 			print("No items checked")
 			return
-		for path in self.already_checked:
-			if path.parent == []:
-				print("Parent = []")
-			else:
-				print("Parent = " + str(path.parent.state))
-			print("Current = " + str(path.current.state))
+		for state in self.already_checked:
+			print("Current = " + str(state.state))
 			print("\n")
 		
+	def printFrontierSize(self):
+		print("Frontier Size: " + str(len(self.frontier)))
 		
+	def printAlreadyCheckedSize(self):
+		print("Already Checked Size: " + str(len(self.already_checked)))
 	def dfs(self, current_path):
-		print("entered dfs")
+		#print("entered dfs")
+		if self.current_iter == self.max_iter:
+			return
+		self.current_iter += 1
 		if self.goal_func(current_path.current):
 			return current_path
 		else:
-			self.already_checked.append(current_path)
+			self.already_checked.append(current_path.current)
 			# Expand current
 			self.expandMilkStateNode(current_path)
 			self.printFrontier()
-			self.printAlreadyChecked()
+			#self.printAlreadyChecked()
+			self.printFrontierSize();
+			self.printAlreadyCheckedSize();
 			# DFS with Last in First Out
+			self.dfs(self.frontier.pop())

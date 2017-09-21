@@ -47,5 +47,9 @@ class MilkStateNode:
 		
 		new_states[jug1] = newJug1
 		new_states[jug2] = newJug2
+		if new_states[0] < new_states[1]:
+			temp = new_states[0]
+			new_states[0] = new_states[1]
+			new_states[1] = temp
 		#print("new states = " + str(new_states))
 		return new_states

@@ -21,6 +21,20 @@ def goalFunction(node):
 	if node.state[0] + node.state[1] + node.state[2] + node.state[3] != 80:
 		return False
 	return True
+	
+def goalFunction2(node):
+	print("Entered goal function")
+	if node.state[0] != 38:
+		return False
+	if node.state[1] != 38:
+		return False
+	if node.state[2] != 2:
+		return False
+	if node.state[3] != 2:
+		return False
+	if node.state[0] + node.state[1] + node.state[2] + node.state[3] != 80:
+		return False
+	return True
 
 def main():
 	milk_state_tester = MilkStateTester()
