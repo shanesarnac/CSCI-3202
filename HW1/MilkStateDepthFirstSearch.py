@@ -5,18 +5,19 @@ from PathNode import PathNode
 class DepthFirstSearch:
 	frontier = []
 	already_checked = []
+	solution = []
 	goal_func = 0
-	max_iter = 1
+	max_iter = 1000
 	current_iter = 0
 	
 	def __init__(self, start, goal):
-		print("entered DepthFirstSearch init")
 		self.goal_func = goal
-		self.dfs(PathNode([], start))
+		self.solution = self.dfs(PathNode([], start))
 		
 	def addToFrontier(self, milk_state_path_node):
-		if milk_state_path_node.current in self.already_checked:
-			return
+		for node in self.already_checked:
+			if node.state == milk_state_path_node.current.state:
+				return
 		for node in self.frontier:
 			if node.current.state == milk_state_path_node.current.state:
 				return
@@ -68,8 +69,18 @@ class DepthFirstSearch:
 		
 	def printAlreadyCheckedSize(self):
 		print("Already Checked Size: " + str(len(self.already_checked)))
+		
+	def printSolutionPath(self):
+		def printPath(path):
+			if path.parent != []:
+				printPath(path.parent)
+			print(path.current.state)
+		if self.solution is not None:
+			printPath(self.solution)
+		else:
+			print("No solution.")
+		
 	def dfs(self, current_path):
-		#print("entered dfs")
 		if self.current_iter == self.max_iter:
 			return
 		self.current_iter += 1
@@ -79,9 +90,8 @@ class DepthFirstSearch:
 			self.already_checked.append(current_path.current)
 			# Expand current
 			self.expandMilkStateNode(current_path)
-			self.printFrontier()
-			#self.printAlreadyChecked()
-			self.printFrontierSize();
-			self.printAlreadyCheckedSize();
+			if len(self.frontier) == 0:
+				self.printAlreadyCheckedSize()
+				return
 			# DFS with Last in First Out
-			self.dfs(self.frontier.pop())
+			return self.dfs(self.frontier.pop())

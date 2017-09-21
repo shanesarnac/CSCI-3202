@@ -9,7 +9,6 @@ jugD = 0
 
 
 def goalFunction(node):
-	print("Entered goal function")
 	if node.state[0] > 40:
 		return False
 	if node.state[1] > 40:
@@ -23,7 +22,6 @@ def goalFunction(node):
 	return True
 	
 def goalFunction2(node):
-	print("Entered goal function")
 	if node.state[0] != 38:
 		return False
 	if node.state[1] != 38:
@@ -42,7 +40,8 @@ def main():
 		exit()
 	
 	initial_state = MilkStateNode([jugA, jugB, jugC, jugD])
-	dfs = DepthFirstSearch(initial_state, goalFunction)
+	dfs = DepthFirstSearch(initial_state, goalFunction2)
+	dfs.printSolutionPath()
 	
 	
 	
