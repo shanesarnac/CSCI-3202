@@ -1,22 +1,28 @@
 
 
 class Player:
-	RED = 0
-	BLUE = 1
+	RED = "Red"
+	BLUE = "Blue"
 	
 class GameMode:
-	ONEPLAYER = 0
-	TWOPLAYER = 1
-	
+	ONEPLAYER = "One Player"
+	TWOPLAYER = "Two Player"
 
+class Edge:
+	def __init__(self, v1, v2, p):
+		self.edge = (v1, v2)
+		self.player = p
 
 class Sim:
+	game_mode = 0
 	node_count = 0
 	node_list = []
-	game_mode = 0
+	edge_list = []
+	
 	
 	def __init__(self):
 		self.gameSetup()
+		self.launchGame()
 		
 	def setGameMode(self):
 		mode = 0
@@ -38,7 +44,7 @@ class Sim:
 		node_count_response = 0
 		try:
 			node_count_response = input("Enter the number of points you want to play with: ")
-			if type(node_count_response) is int:
+			if type(node_count_response) is int and node_count_response > 3:
 				self.node_count = node_count_response
 			else:
 				print("Invalid entry")
@@ -46,14 +52,23 @@ class Sim:
 		except NameError:
 			print("Invalid entry")
 			self.setNodeCount()
+			
+	def generateNodeList(self):
+		for count in range(self.node_count):
+			self.node_list.append(chr(ord('A') + count))
+			
 		
 	def gameSetup(self):
 		print("Welcome to SIM")
 		self.setGameMode()
 		self.setNodeCount()
-		print(self.node_count)
+		self.generateNodeList()
+		print("Game mode = " + str(self.game_mode))
+		print("Node count = " + str(self.node_count))
+		print("Node list = " + str(self.node_list))
 		
-		
+	def launchGame(self):
+		print("Hello World!")
 		
 
 
