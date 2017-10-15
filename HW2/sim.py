@@ -12,17 +12,37 @@ class Edge:
 	def __init__(self, v1, v2, p):
 		self.edge = (v1, v2)
 		self.player = p
+	
+	def getEdge(self):
+		return self.edge
+	
+	def getPlayer(self):
+		return self.player
 
 class Sim:
 	game_mode = 0
 	node_count = 0
 	node_list = []
 	edge_list = []
+	player1 = 0
+	player2 = 0
 	
 	
 	def __init__(self):
 		self.gameSetup()
-		self.launchGame()
+		self.playGame()
+		
+	def isValidEdge(self, v1, v2):
+		def isEdgeInEdgeList(v1, v2, lst):
+			for edge in edge_list:
+				if edge.getEdge() == (v1, v2):
+					return True
+				return False
+				
+		if v1 == v2:
+			return False
+		return !isEdgeInEdgeList(v1, v2, self.edge_list)
+		
 		
 	def setGameMode(self):
 		mode = 0
@@ -57,18 +77,37 @@ class Sim:
 		for count in range(self.node_count):
 			self.node_list.append(chr(ord('A') + count))
 			
+	def setPlayerColor(self):
+		player_choice = raw_input("Would you like to be (r)ed or (b)lue? ")
+		if player_choice == "r":
+			self.player1 = Player.RED
+			self.player2 = Player.BLUE
+		elif player_choice == "b":
+			self.player1 = Player.BLUE
+			self.player2 = Player.RED
+		else:
+			print("Invalid choice")
+			self.setPlayerColor()
+			
 		
 	def gameSetup(self):
 		print("Welcome to SIM")
 		self.setGameMode()
 		self.setNodeCount()
 		self.generateNodeList()
+		self.setPlayerColor()
 		print("Game mode = " + str(self.game_mode))
 		print("Node count = " + str(self.node_count))
 		print("Node list = " + str(self.node_list))
+		print("Player 1 Color: " + self.player1)
+		print("Player 2 Color: " + self.player2)
 		
-	def launchGame(self):
-		print("Hello World!")
+	def playGame(self):
+		# Check game state: Has anyone lost yet?
+		# If not, let the next player pick a new edge
+		print("Hello World")
+		
+	
 		
 
 
