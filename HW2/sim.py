@@ -1,4 +1,5 @@
 
+debug = False
 
 class Player:
 	RED = "Red"
@@ -77,6 +78,12 @@ class Sim:
 		for count in range(self.node_count):
 			self.node_list.append(chr(ord('A') + count))
 			
+	def printNodeList(self):
+		node_str = "Available Points: "
+		for node in self.node_list:
+			node_str += node + ", "
+		print(node_str)
+			
 	def setPlayerColor(self):
 		player_choice = raw_input("Would you like to be (r)ed or (b)lue? ")
 		if player_choice == "r":
@@ -96,13 +103,21 @@ class Sim:
 		self.setNodeCount()
 		self.generateNodeList()
 		self.setPlayerColor()
-		print("Game mode = " + str(self.game_mode))
-		print("Node count = " + str(self.node_count))
-		print("Node list = " + str(self.node_list))
-		print("Player 1 Color: " + self.player1)
-		print("Player 2 Color: " + self.player2)
+		if debug == True:
+			print("Game mode = " + str(self.game_mode))
+			print("Node count = " + str(self.node_count))
+			print("Node list = " + str(self.node_list))
+			print("Player 1 Color: " + self.player1)
+			print("Player 2 Color: " + self.player2)
+		
+	def chooseEdge(self):
+		self.printNodeList()
 		
 	def playGame(self):
+		if player1 == Player.RED:
+			self.current_player = player1
+		else:
+			self.current_player = player2
 		# Check game state: Has anyone lost yet?
 		# If not, let the next player pick a new edge
 		print("Hello World")
