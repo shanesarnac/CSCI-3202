@@ -33,16 +33,23 @@ class Sim:
 		self.gameSetup()
 		self.playGame()
 		
+	def isGameOver(self):
+		return False
+		
 	def isValidEdge(self, v1, v2):
-		def isEdgeInEdgeList(v1, v2, lst):
-			for edge in edge_list:
+		def isEdgeInEdgeList(v1, v2, edge_list):
+			if edge_list == []:
+				return False
+			for edge in edge_list: 
 				if edge.getEdge() == (v1, v2):
 					return True
-				return False
+			return False
 				
 		if v1 == v2:
 			return False
-		return !isEdgeInEdgeList(v1, v2, self.edge_list)
+		if v1 not in self.node_list or v2 not in self.node_list:
+			return False
+		return not isEdgeInEdgeList(v1, v2, self.edge_list)
 		
 		
 	def setGameMode(self):
@@ -83,15 +90,28 @@ class Sim:
 		for node in self.node_list:
 			node_str += node + ", "
 		print(node_str)
+	
+	def printEdgeList(self):
+		red_edge_str = "Red Edges:"
+		blue_edge_str = "Blue Edges: "
+		for edge in self.edge_list:
+			if edge.getPlayer() == "Red":
+				red_edge_str += str(edge.getEdge()) + ","
+			else:
+				blue_edge_str += str(edge.getEdge()) + ","
+		print(red_edge_str)
+		print(blue_edge_str)
 			
 	def setPlayerColor(self):
 		player_choice = raw_input("Would you like to be (r)ed or (b)lue? ")
 		if player_choice == "r":
 			self.player1 = Player.RED
 			self.player2 = Player.BLUE
+			self.current_player = self.player1
 		elif player_choice == "b":
 			self.player1 = Player.BLUE
 			self.player2 = Player.RED
+			self.current_player = self.player2
 		else:
 			print("Invalid choice")
 			self.setPlayerColor()
@@ -109,20 +129,40 @@ class Sim:
 			print("Node list = " + str(self.node_list))
 			print("Player 1 Color: " + self.player1)
 			print("Player 2 Color: " + self.player2)
+			
+	def addEdge(self, edge_choice_lst):
+		self.edge_list.append(Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player))
 		
 	def chooseEdge(self):
+		print(self.current_player + " it is your turn!")
 		self.printNodeList()
+		self.printEdgeList()
+		edge_choice = raw_input("Enter edge (ex: A,B): ")
+		edge_choice_lst = edge_choice.split(",")
+		if len(edge_choice_lst) != 2:
+			print("Not a valid edge choice!")
+			self.chooseEdge()
+		elif not self.isValidEdge(edge_choice_lst[0], edge_choice_lst[1]):
+			print("Not a valid edge choice!")
+			self.chooseEdge()
+		else: 
+			self.addEdge(edge_choice_lst)
 		
 	def playGame(self):
-		if player1 == Player.RED:
-			self.current_player = player1
-		else:
-			self.current_player = player2
+		while not self.isGameOver():
+			self.chooseEdge()
+			self.switchPlayer()
+			print("")
 			
-		self.chooseEdge
 		# Check game state: Has anyone lost yet?
 		# If not, let the next player pick a new edge
 		print("Hello World")
+		
+	def switchPlayer(self):
+		if self.current_player == self.player1:
+			self.current_player = self.player2
+		else:
+			self.current_player = self.player1
 		
 	
 		
