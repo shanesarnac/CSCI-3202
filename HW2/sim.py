@@ -1,5 +1,17 @@
+# Shane Sarnac
+# Sim Game
+# October 2017
+
+import math
 
 debug = False
+
+def nCr(n, r):
+	if r >= n:
+		return 0
+	return math.factorial(n)/(math.factorial(r)*math.factorial(n-r))
+
+
 
 class Player:
 	RED = "Red"
@@ -20,11 +32,15 @@ class Edge:
 	def getPlayer(self):
 		return self.player
 
+
 class Sim:
 	game_mode = 0
 	node_count = 0
 	node_list = []
 	edge_list = []
+	red_edge_list = []
+	blue_edge_list = []
+	max_edges = 0
 	player1 = 0
 	player2 = 0
 	
@@ -32,8 +48,37 @@ class Sim:
 	def __init__(self):
 		self.gameSetup()
 		self.playGame()
+	
+	def isTriangle(self, edge_list):
+		# if there are only 3 unique characters, it must be a triangle
+		unique_chars = []
+		for edge in edge_list:
+			for character in edge.getEdge():
+				if character not in unique_chars:
+					unique_chars.append(character)
+		
+		#print("Edge List = " + str(edge_list[0].getEdge()) + "," + str(edge_list[1].getEdge()) + "," + str(edge_list[2].getEdge()))
+		#print("Unique Chars = " + str(unique_chars))
+		return len(unique_chars) == 3
+
+		
 		
 	def isGameOver(self):
+		player_list = []
+		if self.current_player == Player.RED:
+			player_list = self.red_edge_list
+		else:
+			player_list = self.blue_edge_list
+		
+		if len(player_list) < 3:
+			return False
+
+		for i in range(len(player_list)-2):
+			for j in range(i+1, len(player_list)-1):
+				for k in range(j+1,len(player_list)):
+					if (self.isTriangle([player_list[i], player_list[j], player_list[k]])):
+						return True
+		
 		return False
 		
 	def isValidEdge(self, v1, v2):
@@ -74,6 +119,7 @@ class Sim:
 			node_count_response = input("Enter the number of points you want to play with: ")
 			if type(node_count_response) is int and node_count_response > 3:
 				self.node_count = node_count_response
+				self.max_edges = nCr(self.node_count, 2)
 			else:
 				print("Invalid entry")
 				self.setNodeCount()
@@ -132,6 +178,10 @@ class Sim:
 			
 	def addEdge(self, edge_choice_lst):
 		self.edge_list.append(Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player))
+		if self.current_player == self.player1:
+			self.red_edge_list.append(Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player))
+		else:
+			self.blue_edge_list.append(Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player))
 		
 	def chooseEdge(self):
 		print(self.current_player + " it is your turn!")
@@ -139,24 +189,34 @@ class Sim:
 		self.printEdgeList()
 		edge_choice = raw_input("Enter edge (ex: A,B): ")
 		edge_choice_lst = edge_choice.split(",")
+		edge_choice_lst = sorted(edge_choice_lst)
 		if len(edge_choice_lst) != 2:
-			print("Not a valid edge choice!")
+			print("Not a valid edge choice!\n")
 			self.chooseEdge()
 		elif not self.isValidEdge(edge_choice_lst[0], edge_choice_lst[1]):
-			print("Not a valid edge choice!")
+			print("Not a valid edge choice!\n")
 			self.chooseEdge()
 		else: 
 			self.addEdge(edge_choice_lst)
 		
 	def playGame(self):
-		while not self.isGameOver():
-			self.chooseEdge()
+		print("Max edges = " + str(self.max_edges))
+		self.chooseEdge()
+		print("")
+		while not self.isGameOver() and len(self.edge_list) < self.max_edges:
 			self.switchPlayer()
+			self.chooseEdge()
 			print("")
+		
+		if len(self.edge_list) == self.max_edges:
+			print("This game is a draw!")
+		else:
+			print(self.current_player + ", you lose!")
+			self.switchPlayer()
+			print(self.current_player + ", you win!")
 			
 		# Check game state: Has anyone lost yet?
 		# If not, let the next player pick a new edge
-		print("Hello World")
 		
 	def switchPlayer(self):
 		if self.current_player == self.player1:
