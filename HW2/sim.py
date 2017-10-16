@@ -118,6 +118,8 @@ class Sim:
 			self.current_player = player1
 		else:
 			self.current_player = player2
+			
+		self.chooseEdge
 		# Check game state: Has anyone lost yet?
 		# If not, let the next player pick a new edge
 		print("Hello World")
