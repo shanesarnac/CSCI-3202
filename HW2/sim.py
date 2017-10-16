@@ -57,8 +57,9 @@ class Sim:
 				if character not in unique_chars:
 					unique_chars.append(character)
 		
-		#print("Edge List = " + str(edge_list[0].getEdge()) + "," + str(edge_list[1].getEdge()) + "," + str(edge_list[2].getEdge()))
-		#print("Unique Chars = " + str(unique_chars))
+		if debug:
+			print("Edge List = " + str(edge_list[0].getEdge()) + "," + str(edge_list[1].getEdge()) + "," + str(edge_list[2].getEdge()))
+			print("Unique Chars = " + str(unique_chars))
 		return len(unique_chars) == 3
 
 		
