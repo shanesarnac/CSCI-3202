@@ -11,7 +11,21 @@ def nCr(n, r):
 		return 0
 	return math.factorial(n)/(math.factorial(r)*math.factorial(n-r))
 
-
+class SimAI:
+	my_edges = []
+	opponents_edges = []
+	node_list = []
+	
+	def __init__(self, nodes):
+		self.node_list = nodes
+	
+	def chooseBestEdge(self, myedges, oppedges, remaining):
+		self.my_edges = myedges
+		self.opponents_edges = oppedges
+		return remaining[0]
+		
+		
+	
 
 class Player:
 	RED = "Red"
@@ -97,6 +111,13 @@ class Sim:
 			return False
 		return not isEdgeInEdgeList(v1, v2, self.edge_list)
 		
+	def getRemainingEdges(self):
+		remaining_edges = []
+		for i in range(self.node_count-1):
+			for j in range(i+1, self.node_count):
+				if self.isValidEdge(self.node_list[i], self.node_list[j]):
+					remaining_edges.append(Edge(self.node_list[i], self.node_list[j],[]))
+		return remaining_edges
 		
 	def setGameMode(self):
 		mode = 0
@@ -188,6 +209,12 @@ class Sim:
 		print(self.current_player + " it is your turn!")
 		self.printNodeList()
 		self.printEdgeList()
+		if self.game_mode == GameMode.ONEPLAYER and self.current_player == self.player2:
+			self.chooseEdgeAI()
+		else:
+			self.chooseEdgeUser()
+			
+	def chooseEdgeUser(self):
 		edge_choice = raw_input("Enter edge (ex: A,B): ")
 		edge_choice_lst = edge_choice.split(",")
 		edge_choice_lst = sorted(edge_choice_lst)
@@ -199,9 +226,27 @@ class Sim:
 			self.chooseEdge()
 		else: 
 			self.addEdge(edge_choice_lst)
+			
+	def chooseEdgeAI(self):
+		# Find all remaining options
+		ai_edges = []
+		usr_edges = []
+		if self.current_player == Player.RED:
+			ai_edges = self.red_edge_list
+			usr_edges = self.blue_edge_list
+		else:
+			ai_edges = self.blue_edge_list
+			usr_edges = self.red_edge_list
+		ai = SimAI(self.node_list)
+		edge_choice = ai.chooseBestEdge(ai_edges, usr_edges, self.getRemainingEdges())
+		print("Enter edge (ex: A,B): " + str(edge_choice.getEdge()[0]) + "," + str(edge_choice.getEdge()[1]))
+		self.addEdge([edge_choice.getEdge()[0], edge_choice.getEdge()[1]])
+		# Choose best of remaining options
 		
 	def playGame(self):
-		print("Max edges = " + str(self.max_edges))
+		if debug:
+			print("Max edges = " + str(self.max_edges))
+		print("")
 		self.chooseEdge()
 		print("")
 		while not self.isGameOver() and len(self.edge_list) < self.max_edges:
@@ -215,9 +260,6 @@ class Sim:
 			print(self.current_player + ", you lose!")
 			self.switchPlayer()
 			print(self.current_player + ", you win!")
-			
-		# Check game state: Has anyone lost yet?
-		# If not, let the next player pick a new edge
 		
 	def switchPlayer(self):
 		if self.current_player == self.player1:
