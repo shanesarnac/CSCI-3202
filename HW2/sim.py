@@ -85,6 +85,13 @@ class Sim:
 		else:
 			player_list = self.blue_edge_list
 		
+		if debug:
+			print("\nisGameOver - Player is" + self.current_player)
+			edge_str = "isGameOver - edge_list is "
+			for edge in player_list:
+				edge_str += str(edge.getEdge()) + "," 
+			print(edge_str + "\n")
+		
 		if len(player_list) < 3:
 			return False
 
@@ -199,22 +206,23 @@ class Sim:
 			print("Player 2 Color: " + self.player2)
 			
 	def addEdge(self, edge_choice_lst):
-		self.edge_list.append(Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player))
-		if self.current_player == self.player1:
-			self.red_edge_list.append(Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player))
+		edge_to_add = Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player)
+		self.edge_list.append(edge_to_add)
+		if self.current_player == Player.RED:
+			self.red_edge_list.append(edge_to_add)
 		else:
-			self.blue_edge_list.append(Edge(edge_choice_lst[0], edge_choice_lst[1], self.current_player))
+			self.blue_edge_list.append(edge_to_add)
 		
 	def chooseEdge(self):
-		print(self.current_player + " it is your turn!")
-		self.printNodeList()
-		self.printEdgeList()
 		if self.game_mode == GameMode.ONEPLAYER and self.current_player == self.player2:
 			self.chooseEdgeAI()
 		else:
 			self.chooseEdgeUser()
 			
 	def chooseEdgeUser(self):
+		print(self.current_player + " it is your turn!")
+		self.printNodeList()
+		self.printEdgeList()
 		edge_choice = raw_input("Enter edge (ex: A,B): ")
 		edge_choice_lst = edge_choice.split(",")
 		edge_choice_lst = sorted(edge_choice_lst)
@@ -239,9 +247,8 @@ class Sim:
 			usr_edges = self.red_edge_list
 		ai = SimAI(self.node_list)
 		edge_choice = ai.chooseBestEdge(ai_edges, usr_edges, self.getRemainingEdges())
-		print("Enter edge (ex: A,B): " + str(edge_choice.getEdge()[0]) + "," + str(edge_choice.getEdge()[1]))
 		self.addEdge([edge_choice.getEdge()[0], edge_choice.getEdge()[1]])
-		# Choose best of remaining options
+
 		
 	def playGame(self):
 		if debug:
