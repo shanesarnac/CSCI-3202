@@ -11,21 +11,54 @@ def nCr(n, r):
 		return 0
 	return math.factorial(n)/(math.factorial(r)*math.factorial(n-r))
 
+
 class SimAI:
 	my_edges = []
 	opponents_edges = []
 	node_list = []
+	node_overlap = {}
 	
 	def __init__(self, nodes):
 		self.node_list = nodes
+		for node in self.node_list:
+			self.node_overlap[node] = 0
+		
+	def countNodeOverlap(self):
+		for node in self.node_list:
+			self.node_overlap[node] = 0
+		for edge in self.my_edges:
+			(node1, node2) = edge.getEdge()
+			self.node_overlap[node1] += 1
+			self.node_overlap[node2] += 1
+			
+	def buildEdgeWeightTree(self, remaining):
+		weighted_edges = []
+		for edge in remaining:
+			(node1, node2) = edge.getEdge()
+			weight = self.node_overlap[node1] + self.node_overlap[node2]
+			weighted_edges.append((edge, weight))
+			#print("Edge: (" + node1 + "," + node2 + ")")
+			#print("Weight: " + str(weight))
+		return weighted_edges
+				
+	def findBestEdge(self, remaining):
+		self.countNodeOverlap()
+		edge_weight_tree = self.buildEdgeWeightTree(remaining)
+		best_edge_weight = 100
+		best_edge = 0
+		for node in edge_weight_tree:
+			(edge, weight) = node
+			print("Edge: " + str(edge.getEdge()) + " Weight: " + str(weight))
+			print(best_edge_weight)
+			if weight < best_edge_weight:
+				best_edge_weight = weight
+				best_edge = edge
+		return best_edge
 	
 	def chooseBestEdge(self, myedges, oppedges, remaining):
 		self.my_edges = myedges
 		self.opponents_edges = oppedges
-		return remaining[0]
-		
-		
-	
+		return self.findBestEdge(remaining)
 
 class Player:
 	RED = "Red"
