@@ -49,7 +49,6 @@ class SimAI:
 		for node in edge_weight_tree:
 			(edge, weight) = node
 			print("Edge: " + str(edge.getEdge()) + " Weight: " + str(weight))
-			print(best_edge_weight)
 			if weight < best_edge_weight:
 				best_edge_weight = weight
 				best_edge = edge
