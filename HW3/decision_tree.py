@@ -59,7 +59,25 @@ class TV_Show_Creator:
 class DecisionTreeNode:
 	def __init__(self, attr, pointers):
 		self.attribute = attr
-		self.pointers_list = pointers	
+		self.pointers_list = pointers
+	
+	def printTree(self):
+		print("")
+		print("Attribute = " + self.attribute)
+		print("Left -> " + str(self.pointers_list[0].attribute))
+		print("Right -> " + str(self.pointers_list[-1].attribute))	
+		
+		self.pointers_list[0].printTree()
+		self.pointers_list[1].printTree()
+		
+class DecisionTreeLeaf:
+	def __init__(self, val):
+		self.value = val
+		self.attribute = str(self.value) + " Leaf"
+		self.pointers_list = []
+		
+	def printTree(self):
+		print("")
 		
 class DecisionTree:
 	
@@ -71,7 +89,7 @@ class DecisionTree:
 		
 	def buildTree(self, headers, shows_list):
 		if len(shows_list) == 0 or len(headers) == 0:
-			return
+			return DecisionTreeLeaf(False)
 		best_attr = ""
 		best_attr_value = 100
 		for header in headers:
@@ -79,11 +97,27 @@ class DecisionTree:
 			if info < best_attr_value:
 				best_attr = header
 				best_attr_value = info
+			if best_attr_value == 0:
+				return self.turnZeroInfoIntoLeaves(best_attr, shows_list)
+		
 		print("best attr = " + best_attr)
 		print("best_attr_value = " + str(best_attr_value))
 		headers.remove(best_attr)
 		(shows_with, shows_without) = self.getListWithAttribute(best_attr, shows_list)
 		return DecisionTreeNode(best_attr, [self.buildTree(headers, shows_with), self.buildTree(headers, shows_without)])
+		
+	def turnZeroInfoIntoLeaves(self, attr, shows_list):
+		(shows_with, shows_without) = self.getListWithAttribute(attr, shows_list)
+		total_watch_with = self.getNumberWithAttribute("Watch", shows_with)
+		total_watch_without = self.getNumberWithAttribute("Watch", shows_without)
+		
+		if total_watch_with > 0:
+			return DecisionTreeNode(attr, [DecisionTreeLeaf(True), DecisionTreeLeaf(False)])
+		if total_watch_without > 0:
+			return DecisionTreeNode(attr, [DecisionTreeLeaf(False), DecisionTreeLeaf(True)]) 
+		
+		return DecisionTreeNode(attr, [DecisionTreeLeaf(False), DecisionTreeLeaf(False)])
+		
 		
 	def getListWithAttribute(self, attr, shows_list):
 		shows_with = []
@@ -158,6 +192,15 @@ class DecisionTree:
 		
 		return info_with + info_without
 		
+	def printTree(self):
+		print("")
+		self.tree.printTree()
+		
+		#print("Pointers count = " + str(len(self.tree.pointers_list)))
+		#print("Attribute = " + str(self.tree.attribute))
+		
+		#print("Left Attribute = " + str(self.tree.pointers_list[0].attribute))
+		#print("Right Attribute = " + str(self.tree.pointers_list[1].attribute))
 		
 		
 
@@ -165,6 +208,7 @@ def main():
 	creator = TV_Show_Creator()
 	(tv_shows, headers) = creator.buildTvShowsFromFile(TV_FILE)
 	decision_tree = DecisionTree(headers,tv_shows[0:20])
+	decision_tree.printTree()
 	
 	
 	
