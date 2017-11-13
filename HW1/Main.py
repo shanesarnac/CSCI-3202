@@ -41,8 +41,5 @@ def main():
 	
 	initial_state = MilkStateNode([jugA, jugB, jugC, jugD])
 	dfs = DepthFirstSearch(initial_state, goalFunction2)
-	dfs.printSolutionPath()
-	
-	
-	
+	dfs.printSolutionPath()	
 main()
