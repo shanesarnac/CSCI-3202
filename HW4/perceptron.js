@@ -56,26 +56,23 @@ function sigmoidalFunction(x) {
 }
 
 function outputFunction(sum) {
-	var output = sigmoidalFunction(sum);
-	if (output < 0.5) {
-		return 0
-	} else {
-		return 1
-	}
+	return sigmoidalFunction(sum);
 }
 
 function outputFunctionPrime(sum) {
 	return sigmoidalFunction(sum) * (1 - sigmoidalFunction(sum));
+	//return Math.exp(sum) / Math.pow(Math.exp(sum) + 1, 2);
 }
 
 function calculateError(output, expected) {
-	return output - expected
+	return expected - output;
 }
 
 function adjustWeight(sum, error, node_value, node_weight) {
 	var alpha = 0.5;
+	//console.log("old_weight = " + node_weight + ", error = " + error + ", G'(sum) = " + outputFunctionPrime(sum)  + ", node_value = " + node_value);
 	var new_weight = node_weight + alpha * error * outputFunctionPrime(sum) * node_value;
-	//console.log("new_weight = " + new_weight);
+	//console.log("new_weight = " + new_weight + "\n");
 	return new_weight;
 }
 
@@ -96,10 +93,17 @@ function runSimulation(iterations, printing_frequency, data_set, expected, node_
 	console.log("expected  " + expected);
 	console.log("weights = " + node_weights);*/
 	for (var i = 0; i < iterations; i++) {
+		if (i % printing_frequency == 0) {
+			printWeights(i, node_weights);
+		}
 		for (var j = 0; j < data_set.length; j++) {
 			sum = calculateSum(data_set[j], node_weights);
 			output = outputFunction(sum);
 			error = calculateError(output, expected[j]);
+			
+			if (i % printing_frequency == 0) {
+				//printResults(data_set[j], expected[j], output);
+			}
 			/*console.log("data = " + data_set[j]);
 			console.log("edge weights = " + node_weights + " (before)");
 			console.log("sum = " + sum);
@@ -109,13 +113,11 @@ function runSimulation(iterations, printing_frequency, data_set, expected, node_
 				node_weights[k] = adjustWeight(sum, error, data_set[j][k], node_weights[k]);
 			}
 			/*console.log("edge_weights = " + node_weights + " (after) \n");*/
-			if (i == iterations-1) {
+			/*if (i == iterations-1) {
 				printResults(data_set[j], expected[j], output);
-			}
+			}*/
 		}
-		if (i % printing_frequency == 0) {
-			printWeights(i, node_weights);
-		}
+		
 		
 	}
 }
@@ -123,6 +125,6 @@ function runSimulation(iterations, printing_frequency, data_set, expected, node_
 
 
 function main() {
-	new Perceptron(8001, 250);
+	new Perceptron(100, 5);
 }
 main()

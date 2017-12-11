@@ -78,7 +78,8 @@ class Neighborhood:
 		for i in range(len(self.empty)):
 			zeroes_str += str(self.empty[i]) + ","
 		# print(neighborhood_str + "     " + zeroes_str)
-		print(neighborhood_str + "\n")
+		# print(neighborhood_str + "\n")
+		print(neighborhood_str)
 				
 	def findDissatisfied(self):
 		neighborhood_size = len(self.neighborhood)
@@ -140,7 +141,7 @@ class Neighborhood:
 
 def main():
 	neighborhood = Neighborhood(27, 27, 6)
-	neighborhood.runSimulation(20, 401)
+	neighborhood.runSimulation(5, 100)
 	
 	
 	
