@@ -69,7 +69,7 @@ function calculateError(output, expected) {
 }
 
 function adjustWeight(sum, error, node_value, node_weight) {
-	var alpha = 0.5;
+	var alpha = 0.01;
 	//console.log("old_weight = " + node_weight + ", error = " + error + ", G'(sum) = " + outputFunctionPrime(sum)  + ", node_value = " + node_value);
 	var new_weight = node_weight + alpha * error * outputFunctionPrime(sum) * node_value;
 	//console.log("new_weight = " + new_weight + "\n");
@@ -125,6 +125,6 @@ function runSimulation(iterations, printing_frequency, data_set, expected, node_
 
 
 function main() {
-	new Perceptron(100, 5);
+	new Perceptron(10000, 500);
 }
 main()

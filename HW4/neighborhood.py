@@ -142,7 +142,4 @@ class Neighborhood:
 def main():
 	neighborhood = Neighborhood(27, 27, 6)
 	neighborhood.runSimulation(5, 100)
-	
-	
-	
 main()
